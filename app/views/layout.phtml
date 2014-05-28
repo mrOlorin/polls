@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="//<?php echo SITE_URL ?>/assets/default.css">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	</head>
+	<body>
+		<header>
+			<menu>
+				<a href="//<?php echo SITE_URL ?>/index">Юзерка</a>
+				<a href="//<?php echo SITE_URL ?>/admin">Админка</a>
+			</menu>
+			<menu>
+				<?php echo $this->menu; ?>
+			</menu>
+			<?php if(!empty($this->messages)): ?>
+				<div class="messages">
+					<?php foreach($this->messages as $type=>$messages): ?>
+						<?php if(is_array($messages)): ?>
+							<?php foreach($messages as $message): ?>
+								<span class="<?php echo $type ?>"><?php echo $message; ?></span>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+		</header>
+			<?php echo $this->content; ?>
+		<footer></footer>
+	</body>
+</html>

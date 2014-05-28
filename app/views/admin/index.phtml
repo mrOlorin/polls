@@ -1,0 +1,40 @@
+<a href="//<?php echo SITE_URL ?>/admin/index?status=active">Активные</a>
+<a href="//<?php echo SITE_URL ?>/admin/index?status=draft">Черновики</a>
+<a href="//<?php echo SITE_URL ?>/admin/index?status=closed">Закрытые</a>
+<table>
+	<tr>
+		<th>№</th>
+		<th>Название опроса</th>
+		<th></th>
+	</tr>
+	<?php $n = 1; ?>
+	<?php foreach($this->polls as $poll): ?>
+		<tr>
+			<td>
+				<?php echo $n++; ?>
+			</td>
+			<td>
+				<?php echo $poll->getName(); ?>
+			</td>
+			<td>
+				<?php if($poll->getStatus() === 'active'): ?>
+					<a href="//<?php echo SITE_URL, '/admin/results?id=', $poll->getId(); ?>">Результаты</a>
+					<a href="//<?php echo SITE_URL, '/admin/changestatus?id=', $poll->getId(), '&status=closed'; ?>">Закрыть</a>
+				<?php elseif($poll->getStatus() === 'draft'): ?>
+					<a href="//<?php echo SITE_URL, '/admin/edit?id=', $poll->getId(); ?>">Редактировать</a>
+					<a href="//<?php echo SITE_URL, '/admin/changestatus?id=', $poll->getId(), '&status=active'; ?>">Активировать</a>
+				<?php elseif($poll->getStatus() === 'closed'): ?>
+					<a href="//<?php echo SITE_URL, '/admin/results?id=', $poll->getId(); ?>">Результаты</a>
+					<a href="//<?php echo SITE_URL, '/admin/changestatus?id=', $poll->getId(), '&status=active'; ?>">Активировать</a>
+				<?php endif; ?>
+				<a class="delete" href="//<?php echo SITE_URL, '/admin/delete?id=', $poll->getId(); ?>">Удалить</a>
+			</td>
+		</tr>
+	<?php endforeach; ?>
+</table>
+<script src="//<?php echo SITE_URL ?>/assets/admin.js"></script>
+<script>
+	$(function(){
+		new admin();
+	});
+</script>

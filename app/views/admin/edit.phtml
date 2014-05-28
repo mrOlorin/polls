@@ -1,0 +1,66 @@
+<form id="poll" method="POST" action="//<?php echo SITE_URL; ?>/admin/edit<?php if(isset($this->poll)) {echo '?id=', $this->poll->getId();} ?>">
+	<p><label>Название опроса: 
+			<input name="poll_name" required type="text" value="<?php if(isset($this->poll) && is_object($this->poll)) {echo $this->poll->getName();} ?>" autofocus>
+		</label></p>
+	<div id="questions">
+		<?php if (empty($this->poll)): ?>
+			<fieldset class="question">
+				<a class="delete_question" href="javascript:void(0);">удалить</a>
+				<p><label>Вопрос: <input name="question[0]" required type="text"></label></p>
+				<p><label><input type="radio" checked required value="1" name="required[0]">Обязательный</label>
+					<label><input type="radio" required value="0" name="required[0]">Не обязательный</label></p>
+				<p><label><input type="radio" checked required value="single" name="question_type[0]">Один вариант</label>
+					<label><input type="radio" required value="multiple" name="question_type[0]">Несколько вариантов</label></p>
+				<fieldset>
+					<legend>Варианты ответов</legend>
+					<div class="answers">
+						<p><input name="answer[0][]" required type="text">&nbsp;<a class="delete_answer" href="javascript:void(0);">удалить</a></p>
+						<p><input name="answer[0][]" required type="text">&nbsp;<a class="delete_answer" href="javascript:void(0);">удалить</a></p>
+					</div>
+					<button type="button" class="add_answer">Добавить ответ</button>
+				</fieldset>
+			</fieldset>
+		<?php else: ?>
+			<input name="id" value="<?php echo $this->poll->getId(); ?>" type="hidden">
+			<?php $question_num = 0; ?>
+			<?php foreach($this->poll->getQuestions() as $question): ?>
+				<fieldset class="question">
+					<?php if($question->getId()): ?>
+						<input name="question_id[<?php echo $question_num; ?>]" required value="<?php echo $question->getId(); ?>" type="hidden">
+					<?php endif; ?>
+					<a class="delete_question" href="javascript:void(0);">удалить</a>
+					<p><label>Вопрос: <input name="question[<?php echo $question_num; ?>]" required value="<?php echo $question->getText(); ?>" type="text"></label></p>
+					<p><label><input type="radio" value="1" <?php if(1 == $question->getRequired()):?>checked <?php endif ?>name="required[<?php echo $question_num; ?>]" required>Обязательный</label>
+						<label><input type="radio" value="0" <?php if(0 == $question->getRequired()): ?>checked <?php endif ?>name="required[<?php echo $question_num; ?>]"required >Не обязательный</label></p>
+					<p><label><input type="radio" value="single" <?php if('single' === $question->getType()): ?>checked <?php endif ?>name="question_type[<?php echo $question_num; ?>]" required>Один вариант</label>
+						<label><input type="radio" value="multiple" <?php if('multiple' === $question->getType()): ?>checked <?php endif ?>name="question_type[<?php echo $question_num; ?>]" required>Несколько вариантов</label></p>
+					<fieldset>
+						<legend>Варианты ответов</legend>
+						<div class="answers">
+							<?php if($question->getAnswers()): ?>
+								<?php foreach($question->getAnswers() as $answer): ?>
+									<p><?php if($answer->getId()): ?>
+											<input name="answer_id[<?php echo $question_num; ?>][]" required value="<?php echo $answer->getId(); ?>" type="hidden">
+										<?php endif; ?>
+										<input name="answer[<?php echo $question_num; ?>][]" required value="<?php echo $answer->getText(); ?>" type="text">&nbsp;<a class="delete_answer" href="javascript:void(0);">удалить</a></p>
+								<?php endforeach; ?>
+							<?php else: ?>
+								<p><input name="answer[<?php echo $question_num; ?>][]" required type="text">&nbsp;<a class="delete_answer" href="javascript:void(0);">удалить</a></p>
+							<?php endif; ?>
+						</div>
+						<button type="button" class="add_answer">Добавить ответ</button>
+					</fieldset>
+				</fieldset>
+				<?php $question_num++ ?>
+			<?php endforeach; ?>
+		<?php endif; ?>
+	</div>
+	<p><button type="button" id="add_question">Добавить вопрос</button></p>
+	<p><input type="submit" value="Сохранить"></p>
+</form>
+<script src="//<?php echo SITE_URL ?>/assets/edit.js"></script>
+<script>
+	$(function(){
+		new edit();
+	});
+</script>

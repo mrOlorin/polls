@@ -1,0 +1,31 @@
+#poll {
+    width: 500px;
+}
+.answers {
+    margin: 0 0 10px 40px;
+}
+.answer {
+    display:inline-block;
+    width:220px;
+}
+.meter {
+    background-color: #C5C3C5;
+    display: inline-block;
+    width: 100px;
+}
+.filter {
+    margin-bottom: 10px;
+}
+#filter-form {
+    display:none;
+}
+.filter-toggle {
+    border-bottom: 1px dotted;
+    cursor: pointer;
+    font-size: 0.7em;
+    font-weight: normal;
+    width: auto;
+}
+.bold {
+    font-weight: bold;
+}

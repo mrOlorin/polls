@@ -1,0 +1,60 @@
+<h3>Результаты опроса «<?php echo $this->poll->getName(); ?>»</h3>
+<?php if(!empty($this->results)): ?>
+	<div class="filter">
+		<h3>Фильтр <span class="filter-toggle">(показать ↓)</span></h3>
+		<form id="filter-form" method="POST" action="//<?php echo SITE_URL ?>/admin/results?id=<?php echo $this->poll->getId(); ?>">
+			<?php foreach($this->poll->getQuestions() as $question): ?>
+				<div>
+					<span class="bold"><?php echo $question->getText(); ?></span>
+					<div class="answers">
+						<?php foreach($question->getAnswers() as $answer): ?>
+							<Label><input type="checkbox" name="filter[<?php echo $question->getId(); ?>][]" value="<?php echo $answer->getId(); ?>">
+								<?php echo $answer->getText(); ?></Label><br>
+						<?php endforeach; ?>
+					</div>
+				</div>
+				<?php endforeach; ?>
+			<input type="submit">
+		</form>
+		<?php if($this->filter): ?>
+		<a href="//<?php echo SITE_URL ?>/admin/results?id=<?php echo $this->poll->getId(); ?>">Сбросить фильтры</a>
+		<?php endif; ?>
+	</div>
+	<div class="results">
+		<?php if($this->filter): ?>
+			<div class="filter">
+				<span class="bold">Выборка по пользователям:</span><br>
+				<?php foreach($this->filter as $question_id => $answer_ids): ?>
+					<?php echo $this->poll->getQuestion($question_id)->getText(); ?>:
+					<?php foreach($answer_ids as $answer_id): ?>
+						<span class="bold"><?php 
+							echo $this->poll->getQuestion($question_id)->getAnswer($answer_id)->getText(); 
+						?></span>
+					<?php endforeach; ?>
+				<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
+		<?php foreach($this->results['stat'] as $question_id => $results): ?>
+		<div class="question">
+			<span class="bold"><?php echo $this->poll->getQuestion($question_id)->getText(); ?></span>
+			<div class="answers">
+			<?php foreach($results as $answer_id => $stat): ?>
+				<div>
+					<span class="answer"><?php echo $this->poll->getQuestion($question_id)->getAnswer($answer_id)->getText(); ?></span>
+					<progress title="<?php echo $stat['percent']; ?>%" value="<?php echo $stat['percent']; ?>" max="100"><?php echo $stat['percent']; ?>%</progress>
+					<?php echo count($stat['users']); ?> из <?php echo $this->results['passages_count']; ?>
+				</div>
+			<?php endforeach; ?>
+			</div>
+		</div>
+		<?php endforeach; ?>
+	</div>
+<?php else: ?>
+	Нет результатов
+<?php endif; ?>
+<script src="//<?php echo SITE_URL ?>/assets/results.js"></script>
+<script>
+	$(function(){
+		new results();
+	});
+</script>

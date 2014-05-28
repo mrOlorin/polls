@@ -1,0 +1,25 @@
+<form id="poll" method="POST" action="//<?php echo SITE_URL ?>/index/take">
+	<p class="poll_name"><?php echo $this->poll->getName(); ?></p>
+	<div id="questions">
+		<input name="id" value="<?php echo $this->poll->getId() ?>" type="hidden">
+		<?php foreach($this->poll->getQuestions() as $question): ?>
+			<div class="question">
+				<span class="bold"><?php echo $question->getText();
+					if($question->getRequired()) {echo '*';}?></span>
+				<div class="answers">
+				<?php foreach($question->getAnswers() as $answer): ?>
+				<?php 
+					if('single' === $question->getType()) {
+						$type = 'radio';
+					} else {
+						$type = 'checkbox';
+					} 
+				?>
+				<label><input type="<?php echo $type ?>" name="answer[<?php echo $question->getId()?>]" value="<?php echo $answer->getId() ?>"<?php if('radio' === $type && $question->getRequired()) {echo ' required';}?>><?php echo $answer->getText() ?></label><br>
+				<?php endforeach ?>
+				</div>
+			</div>
+		<?php endforeach ?>
+	</div>
+	<p><input type="submit" value="Сохранить"></p>
+</form>
